@@ -4,3 +4,4 @@
 [submodule "buildroot"]
 	path = buildroot
 	url = http://gitlab.com/buildroot.org/buildroot.git
+	sslVerify = false
