@@ -13,13 +13,10 @@ jobs:
         steps:
           - uses: actions/checkout@v2
           - name: Checkout submodules
-            run: git submodule update --init --recursive
-          - name: Install sshpass
-            run: apt-get update && apt-get install -y sshpass
-
+            run: git -c http.sslVerify=false submodule update --init --recursive
           - uses: webfactory/ssh-agent@v0.5.3
             with:
-                ssh-private-key: ${{ secrets.AESD_SECRET }}
+                ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           - name: Run full test
             env:
               GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"

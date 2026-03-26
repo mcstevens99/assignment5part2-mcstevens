@@ -5,6 +5,4 @@ variables:
 
 test:
     script:
-        - git config --global http.sslVerify false
-        - git submodule update --init --recursive
         - ./test.sh
