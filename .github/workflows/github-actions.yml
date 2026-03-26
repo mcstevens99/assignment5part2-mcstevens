@@ -19,16 +19,19 @@ jobs:
                 ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           - name: Disable Wget SSL Verification
             run: echo "check_certificate = off" >> ~/.wgetrc
+          - name: Pre-download zlib to correct folder
+            run: |
+                # 1. Cria a pasta EXATA que o Buildroot está procurando (libzlib)
+                # Note que o caminho deve ser relativo à raiz do seu repo
+                mkdir -p buildroot/dl/libzlib
+          
+                # 2. Baixa o arquivo usando -k (insecure) para passar pelo Proxy Cisco
+                # Usamos o link do GitHub que é mais estável que o zlib.net
+                curl -L -k -o buildroot/dl/libzlib/zlib-1.3.1.tar.xz https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.xz
           - name: Run full test
             env:
               GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
-            run: |
-                mkdir -p buildroot/dl/zlib buildroot/dl/libzlib
-                # Link direto para a versão 1.3.1 no GitHub do madler
-                curl -L --insecure -o zlib-1.3.1.tar.xz https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.xz
-                # Copia para as pastas onde o Buildroot procura
-                cp zlib-1.3.1.tar.xz buildroot/dl/zlib/
-                cp zlib-1.3.1.tar.xz buildroot/dl/libzlib/
+            run: ./full_test.sh
           - name: Cleanup
             if: always()
             run: |
