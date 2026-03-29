@@ -20,14 +20,14 @@ jobs:
           - name: Disable Wget SSL Verification
             run: echo "check_certificate = off" >> ~/.wgetrc
           - name: Pre-download zlib to correct folder
-            run: |
-                # 1. Cria a pasta EXATA que o Buildroot está procurando (libzlib)
-                # Note que o caminho deve ser relativo à raiz do seu repo
-                mkdir -p buildroot/dl/libzlib
-          
-                # 2. Baixa o arquivo usando -k (insecure) para passar pelo Proxy Cisco
-                # Usamos o link do GitHub que é mais estável que o zlib.net
-                curl -L -k -o buildroot/dl/libzlib/zlib-1.3.2.tar.xz https://github.com/madler/zlib/releases/download/v1.3.2/zlib-1.3.2.tar.xz
+            run:|
+                  # Criar diretório onde o Buildroot procura tarballs
+                  mkdir -p buildroot/dl
+
+                  # Fazer download ignorando certificados SSL
+                  wget --no-check-certificate \
+                  -O buildroot/dl/zlib-1.3.2.tar.xz \
+                  https://github.com/madler/zlib/archive/refs/tags/v1.3.2.tar.gz
           - name: Run full test
             env:
               GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
