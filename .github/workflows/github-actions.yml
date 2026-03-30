@@ -17,8 +17,6 @@ jobs:
           - uses: webfactory/ssh-agent@v0.5.3
             with:
                 ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          - name: Disable Wget SSL Verification
-            run: echo "check_certificate = off" >> ~/.wgetrc
           - name: Install Cisco certificate for Docker
             run: |
                   echo "Installing Cisco Root CA into runner trust store"
