@@ -12,13 +12,16 @@ jobs:
         timeout-minutes: 120
         steps:
           - uses: actions/checkout@v2
-          - name: Debug and Update Submodules
+          - name: Update submodules with Debug
             run: |
-              # Ativa logs detalhados de rede e performance do Git
-                  export GIT_TRACE=1
+                  # 1. Forçar HTTPS e desativar verificação de SSL (por causa da data de 2026)
+                  git config --global url."https://gitlab.com/".insteadOf git://gitlab.com/
+                  git config --global http.sslVerify false
+          
+                  # 2. Ativar logs detalhados (isso vai gerar a info que você quer ver)
                   export GIT_CURL_VERBOSE=1
-                  export GIT_TRACE_PACKET=1
-              
+                  export GIT_TRACE=1
+          
               # Tenta o update com as flags de segurança que discutimos
               #git -c http.sslVerify=false submodule update --init --recursive
           - name: Checkout submodules
